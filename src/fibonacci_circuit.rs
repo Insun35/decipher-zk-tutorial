@@ -3,7 +3,10 @@ use plonky2::{
     plonk::circuit_builder::CircuitBuilder,
 };
 
-use crate::{fibonacci::MAX_N, utils::less_than_or_equal_to};
+use crate::{
+    fibonacci::MAX_N,
+    utils::{greater_than, less_than_or_equal_to},
+};
 
 pub struct Witness {
     pub first: Target,
@@ -16,16 +19,19 @@ pub fn fibonacci_circuit<F: RichField + Extendable<D>, const D: usize>(
     nth_fibonacci: u64,
 ) -> Witness {
     let ttrue = builder._true();
+    let one = builder.one();
 
     let first = builder.add_virtual_target();
     let second = builder.add_virtual_target();
     let nth_fibonacci = builder.constant(F::from_canonical_u64(nth_fibonacci));
 
-    // assert!(n <= MAX_N);
+    // assert!(n > 1 && n <= MAX_N);
     let n_target = builder.constant(F::from_canonical_usize(n));
     let max_n = builder.constant(F::from_canonical_usize(MAX_N));
+    let is_greater_than_one = greater_than(builder, n_target, one, 32);
     let is_le_than_max = less_than_or_equal_to(builder, n_target, max_n, 32);
-    builder.connect(is_le_than_max.target, ttrue.target);
+    let range_check = builder.and(is_greater_than_one, is_le_than_max);
+    builder.connect(range_check.target, ttrue.target);
 
     let mut prev1 = first;
     let mut prev2 = second;
