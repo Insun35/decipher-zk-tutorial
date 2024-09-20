@@ -4,7 +4,6 @@ use decipher_zk_tutorial::{
     fibonacci_circuit::fibonacci_circuit,
 };
 use plonky2::field::types::Field;
-use plonky2::gates::public_input;
 use plonky2::iop::witness::PartialWitness;
 use plonky2::iop::witness::WitnessWrite;
 use plonky2::plonk::proof::ProofWithPublicInputs;
