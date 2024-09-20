@@ -5,7 +5,7 @@ use plonky2::{
 
 use crate::{fibonacci::MAX_N, utils::less_than_or_equal_to};
 
-pub struct FibonacciTargets {
+pub struct Witness {
     pub first: Target,
     pub second: Target,
 }
@@ -14,7 +14,7 @@ pub fn fibonacci_circuit<F: RichField + Extendable<D>, const D: usize>(
     builder: &mut CircuitBuilder<F, D>,
     n: usize,
     nth_fibonacci: u64,
-) -> FibonacciTargets {
+) -> Witness {
     let ttrue = builder._true();
 
     let first = builder.add_virtual_target();
@@ -42,5 +42,5 @@ pub fn fibonacci_circuit<F: RichField + Extendable<D>, const D: usize>(
     builder.register_public_input(n_target);
     builder.register_public_input(current);
 
-    FibonacciTargets { first, second }
+    Witness { first, second }
 }

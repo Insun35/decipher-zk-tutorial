@@ -27,11 +27,11 @@ fn prove(
 ) -> Result<ProofWithPublicInputs<F, C, D>> {
     let mut builder = CircuitBuilder::<F, D>::new(CircuitConfig::standard_recursion_config());
 
-    let fibonacci_targets = fibonacci_circuit(&mut builder, n, nth_fibonacci);
+    let witness = fibonacci_circuit(&mut builder, n, nth_fibonacci);
 
     let mut pw = PartialWitness::new();
-    pw.set_target(fibonacci_targets.first, F::from_canonical_u32(first));
-    pw.set_target(fibonacci_targets.second, F::from_canonical_u32(second));
+    pw.set_target(witness.first, F::from_canonical_u32(first));
+    pw.set_target(witness.second, F::from_canonical_u32(second));
 
     let data = builder.build::<C>();
     data.prove(pw)
